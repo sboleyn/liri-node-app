@@ -2,6 +2,7 @@ require("dotenv").config();
 
 var request = require('request');
 var Spotify = require('node-spotify-api');
+var moment = require('moment');
 
 var keys = require('./keys')
 
@@ -32,17 +33,21 @@ if (action === "concert-this"){
     if (!err && resp.statusCode === 200){
       var _body = JSON.parse(body);
 
-      console.log("The artist/band "+ value + " has these upcoming events!");
+      console.log("The artist/band "+ value + " has these upcoming events! (" + _body.length +")");
 
+      var bandCount = 0;
       _body.forEach(function(band){
-        var location = band.venue.city + ", "+band.venue.region +' '+ band.venue.country;
-        console.log('*-----------------*');
+        bandCount += 1;
+        var location = band.venue.city + "," +band.venue.region +' '+ band.venue.country;
+        console.log("Event # " + bandCount);
+        console.log('*-----------------------------------*');
         // console.log(band);
-        console.log("Event #" + band.key);
+        // console.log(_body);
+        // console.log("Event # " + bandCount);
         console.log("Venue Name: " + band.venue.name);
         console.log("Venue Location: " + location);
         console.log("Event Date: " + band.datetime);
-        console.log('*-----------------*\n');
+        console.log('*-----------------------------------*\n');
       })
     }
   })
