@@ -38,7 +38,11 @@ if (action === "concert-this"){
       var bandCount = 0;
       _body.forEach(function(band){
         bandCount += 1;
-        var location = band.venue.city + "," +band.venue.region +' '+ band.venue.country;
+
+        var location = band.venue.city + ", " +band.venue.region +' '+ band.venue.country;
+
+        // var _date = moment(band.dateTime, 'YYYY-MM-DDHH:MM:SS').format('MM/DD/YYYY');
+
         console.log("Event # " + bandCount);
         console.log('*-----------------------------------*');
         // console.log(band);
@@ -46,7 +50,8 @@ if (action === "concert-this"){
         // console.log("Event # " + bandCount);
         console.log("Venue Name: " + band.venue.name);
         console.log("Venue Location: " + location);
-        console.log("Event Date: " + band.datetime);
+        // console.log("Event Date: " + _date);
+        console.log("Event Date: "+moment(band.datetime).format('MM/DD/YYYY'));
         console.log('*-----------------------------------*\n');
       })
     }
