@@ -59,7 +59,7 @@ var handleSpot = function (err, data) {
   else {
     console.log("\nYou've searched for the track: " + value);
     console.log("We found " + data.tracks.items.length + " results!");
-    // console.log(data.tracks.items[0]);
+    console.log(data.tracks.items[0]);
     var songCount = 0;
 
     data.tracks.items.forEach(function (song) {
@@ -70,9 +70,9 @@ var handleSpot = function (err, data) {
 
       console.log("Artist(s): " + song.artists[0].name);
       console.log("Song name: " + song.name);
+      console.log("Album: " + song.album.name);
       console.log("Preview song: " + song.preview_url);
       console.log("Link to Spotify track: " + song.external_urls.spotify);
-      // console.log("Album: " + song.)
 
       console.log('*-----------------------------------*\n');
     })
@@ -92,3 +92,39 @@ if (action === "spotify-this-song") {
     })
   }
 };
+
+// ---------------------------
+// FUNCTION 3
+// ---------------------------
+var handleOMDB = function () {
+
+};
+
+if (action === "movie-this") {
+  if (value) {
+    request("http://www.omdbapi.com/?apikey=trilogy&t=" + value, function (err, resp, data) {
+      var _body = JSON.parse(data)
+      console.log(_body.Title);
+
+      // _body.Search.forEach(function(mov) {
+
+        console.log("\nMovie # ");
+        console.log('*-----------------------------------*');
+
+        console.log("Title of movie: " + _body.Title);
+        console.log("Year: " + _body.Year);
+        console.log("IMDB rating: " + _body.imdbRating);
+        console.log("Rotten Tomatoes rating: " + _body.Ratings[1].Value);
+        console.log("Country: " + _body.Country);
+        console.log("Language: " + _body.Language);
+        console.log("Plot summary: " + _body.Plot);
+        console.log("Actors: " + _body.Actors);
+
+        console.log('*-----------------------------------*\n');
+      // });
+    })
+  }
+  else {
+    console.log("No value supplied");
+  };
+}
