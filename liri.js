@@ -119,7 +119,6 @@ if (action === "movie-this") {
         console.log("Language: " + _body.Language);
         console.log("Plot summary: " + _body.Plot);
         console.log("Actors: " + _body.Actors);
-
         console.log('*-----------------------------------*\n');
       // });
     })
