@@ -4,6 +4,8 @@ var request = require('request');
 var Spotify = require('node-spotify-api');
 var moment = require('moment');
 
+var fs = require('fs');
+
 var keys = require('./keys')
 
 var spotify = new Spotify(keys.spotify);
@@ -17,7 +19,7 @@ var value = argms.splice(3).join(' ');
 // ---------------------------
 
 // `node liri.js concert-this <artist/band name here>`
-if (action === "concert-this") {
+var handleConcert = function () {
   var url = "https://rest.bandsintown.com/artists/" + value + "/events?app_id=codingbootcamp";
   request(url, function (err, resp, body) {
     if (!err && resp.statusCode === 200) {
@@ -46,6 +48,11 @@ if (action === "concert-this") {
       })
     }
   })
+
+}
+
+if (action === "concert-this") {
+  handleConcert();
 }
 
 // ---------------------------
@@ -59,7 +66,7 @@ var handleSpot = function (err, data) {
   else {
     console.log("\nYou've searched for the track: " + value);
     console.log("We found " + data.tracks.items.length + " results!");
-    console.log(data.tracks.items[0]);
+    // console.log(data.tracks.items[0]);
     var songCount = 0;
 
     data.tracks.items.forEach(function (song) {
@@ -138,3 +145,59 @@ if (action === "movie-this") {
 // ---------------------------
 // FUNCTION 4
 // ---------------------------
+
+if (action === "do-what-it-says") {
+  fs.readFile("random.txt", "utf8", function (error, data) {
+
+    // If the code experiences any errors it will log the error to the console.
+    if (error) {
+      return console.log(error);
+    }
+
+    var datArr = data.split(",");
+    // console.log(datArr);
+    action = datArr[0];
+    value = datArr[1];
+    // value = input;
+
+    // console.log(action);
+    // console.log(value);
+    // console.log(input);
+
+    switch (action) {
+      case "concert-this":
+        // console.log("concert-this")
+        value = value.substring(1, value.length - 1)
+        handleConcert();
+        break;
+
+      case "spotify-this-song":
+        // console.log("spotify-this-song");
+
+
+        if (value) {
+          value = value.substring(1, value.length - 1)
+          spotify.search({ type: 'track', query: value, limit: 20 }, function (err, data) {
+            handleSpot(err, data);
+          })
+        }
+        else {
+          spotify.search({ type: 'track', query: "The Sign", limit: 20 }, function (err, data) {
+            handleSpot(err, data);
+          })
+        }
+
+
+        break;
+
+      case "movie-this":
+        value = value.substring(1, value.length - 1)
+        // console.log(value);
+        // console.log("movie-this");
+        handleOMDB();
+        break;
+
+    }
+
+  })
+};
