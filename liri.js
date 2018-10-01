@@ -162,6 +162,8 @@ else if (action === "do-what-it-says") {
     var datArr = data.split(",");
 
     action = datArr[0];
+
+    if (datArr[1]){
     value = datArr[1];
     value = value.substring(1, value.length - 1);
 
@@ -179,7 +181,10 @@ else if (action === "do-what-it-says") {
         break;
 
     }
-
+  }
+  else{
+    console.log("Hmmm, seems that the file may be missing something.")
+  }
   })
 }
 
