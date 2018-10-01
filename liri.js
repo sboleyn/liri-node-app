@@ -97,33 +97,44 @@ if (action === "spotify-this-song") {
 // FUNCTION 3
 // ---------------------------
 var handleOMDB = function () {
-
-};
-
-if (action === "movie-this") {
-  if (value) {
-    request("http://www.omdbapi.com/?apikey=trilogy&t=" + value, function (err, resp, data) {
-      var _body = JSON.parse(data)
-      console.log(_body.Title);
-
-      // _body.Search.forEach(function(mov) {
-
-        console.log("\nMovie # ");
+  request("http://www.omdbapi.com/?apikey=trilogy&t=" + value, function (err, resp, data) {
+    if (!err && resp.statusCode === 200) {
+      var _body = JSON.parse(data);
+      console.log(_body.Response === "True");
+      if (_body.Response === "True") {
+        // console.log(_body.Title);
+        console.log(resp.statusCode);
+        console.log("\nYou searched for " + value);
         console.log('*-----------------------------------*');
-
         console.log("Title of movie: " + _body.Title);
         console.log("Year: " + _body.Year);
         console.log("IMDB rating: " + _body.imdbRating);
-        console.log("Rotten Tomatoes rating: " + _body.Ratings[1].Value);
+        if (_body.Ratings[1]) {
+          console.log("Rotten Tomatoes rating: " + _body.Ratings[1].Value)
+        }
+        else {
+          console.log("Rotten Tomatoes rating: N/A");
+        };
         console.log("Country: " + _body.Country);
         console.log("Language: " + _body.Language);
         console.log("Plot summary: " + _body.Plot);
         console.log("Actors: " + _body.Actors);
         console.log('*-----------------------------------*\n');
-      // });
-    })
+      }
+    };
+  })
+};
+
+if (action === "movie-this") {
+  if (value) {
+    handleOMDB();
   }
   else {
-    console.log("No value supplied");
+    value = "Mr. Nobody";
+    handleOMDB();
   };
 }
+
+// ---------------------------
+// FUNCTION 4
+// ---------------------------
