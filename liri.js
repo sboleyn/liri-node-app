@@ -1,13 +1,12 @@
 require("dotenv").config();
 
 var request = require('request');
-var Spotify = require('node-spotify-api');
 var moment = require('moment');
-
 var fs = require('fs');
 
 var keys = require('./keys')
 
+var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 
 var argms = process.argv;
@@ -51,10 +50,6 @@ var handleConcert = function () {
 
 }
 
-if (action === "concert-this") {
-  handleConcert();
-}
-
 // ---------------------------
 // FUNCTION 2
 // ---------------------------
@@ -86,8 +81,7 @@ var handleSpot = function (err, data) {
   }
 }
 
-if (action === "spotify-this-song") {
-
+var runSpot = function () {
   if (value) {
     spotify.search({ type: 'track', query: value, limit: 20 }, function (err, data) {
       handleSpot(err, data);
@@ -132,7 +126,18 @@ var handleOMDB = function () {
   })
 };
 
-if (action === "movie-this") {
+// ---------------------------
+// MAIN
+// ---------------------------
+if (action === "concert-this") {
+  handleConcert();
+}
+
+else if (action === "spotify-this-song") {
+  runSpot();
+}
+
+else if (action === "movie-this") {
   if (value) {
     handleOMDB();
   }
@@ -146,7 +151,7 @@ if (action === "movie-this") {
 // FUNCTION 4
 // ---------------------------
 
-if (action === "do-what-it-says") {
+else if (action === "do-what-it-says") {
   fs.readFile("random.txt", "utf8", function (error, data) {
 
     // If the code experiences any errors it will log the error to the console.
@@ -155,49 +160,29 @@ if (action === "do-what-it-says") {
     }
 
     var datArr = data.split(",");
-    // console.log(datArr);
+
     action = datArr[0];
     value = datArr[1];
-    // value = input;
-
-    // console.log(action);
-    // console.log(value);
-    // console.log(input);
+    value = value.substring(1, value.length - 1);
 
     switch (action) {
       case "concert-this":
-        // console.log("concert-this")
-        value = value.substring(1, value.length - 1)
         handleConcert();
         break;
 
       case "spotify-this-song":
-        // console.log("spotify-this-song");
-
-
-        if (value) {
-          value = value.substring(1, value.length - 1)
-          spotify.search({ type: 'track', query: value, limit: 20 }, function (err, data) {
-            handleSpot(err, data);
-          })
-        }
-        else {
-          spotify.search({ type: 'track', query: "The Sign", limit: 20 }, function (err, data) {
-            handleSpot(err, data);
-          })
-        }
-
-
+        runSpot();
         break;
 
       case "movie-this":
-        value = value.substring(1, value.length - 1)
-        // console.log(value);
-        // console.log("movie-this");
         handleOMDB();
         break;
 
     }
 
   })
-};
+}
+
+else {
+  console.log("I do not recognize this as an action. Please try again by selection 'concert-this', 'spotify-this-song', 'movies-this', or 'do-what-it-says'. \nHave a nice day.");
+}
