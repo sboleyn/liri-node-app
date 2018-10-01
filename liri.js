@@ -23,7 +23,7 @@ if (action === "concert-this") {
     if (!err && resp.statusCode === 200) {
       var _body = JSON.parse(body);
 
-      console.log("The artist/band " + value + " has these upcoming events! (" + _body.length + ")");
+      console.log("\nThe artist/band " + value + " has these upcoming events! (" + _body.length + ")");
 
       var bandCount = 0;
       _body.forEach(function (band) {
@@ -69,12 +69,25 @@ if (action === "spotify-this-song") {
       return console.log('Error occurred: ' + err);
     }
     else {
-      console.log("You've searched for the track: " + value);
-      console.log(data.tracks.items[0]);
-      // data.tracks.items.forEach(function(song){
-   
-         //   console.log(song);
-      // })
+      console.log("\nYou've searched for the track: " + value);
+      console.log("We found " + data.tracks.items.length + " results!");
+      // console.log(data.tracks.items[0]);
+      var songCount = 0;
+
+      data.tracks.items.forEach(function (song) {
+        songCount += 1;
+                
+        console.log("Song # " + songCount);
+        console.log('*-----------------------------------*');
+
+        console.log("Artist(s): " + song.artists[0].name);
+        console.log("Song name: " + song.name);
+        console.log("Preview song: " + song.preview_url);
+        console.log("Link to Spotify track: " + song.external_urls.spotify);
+        // console.log("Album: " + song.)
+
+        console.log('*-----------------------------------*\n');
+      })
     }
   })
 }
