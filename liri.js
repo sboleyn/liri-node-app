@@ -52,42 +52,43 @@ if (action === "concert-this") {
 // FUNCTION 2
 // ---------------------------
 
-if (action === "spotify-this-song") {
-  // value is a song
-  // search: function({ type: 'artist OR album OR track', query: 'My search query', limit: 20 }, callback);
+var handleSpot = function (err, data) {
+  if (err) {
+    return console.log('Error occurred: ' + err);
+  }
+  else {
+    console.log("\nYou've searched for the track: " + value);
+    console.log("We found " + data.tracks.items.length + " results!");
+    // console.log(data.tracks.items[0]);
+    var songCount = 0;
 
-  // spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
-  //   if (err) {
-  //     return console.log('Error occurred: ' + err);
-  //   }
+    data.tracks.items.forEach(function (song) {
+      songCount += 1;
 
-  // console.log(data); 
-  // });
+      console.log("Song # " + songCount);
+      console.log('*-----------------------------------*');
 
-  spotify.search({ type: 'track', query: value, limit: 20 }, function (err, data) {
-    if (err) {
-      return console.log('Error occurred: ' + err);
-    }
-    else {
-      console.log("\nYou've searched for the track: " + value);
-      console.log("We found " + data.tracks.items.length + " results!");
-      // console.log(data.tracks.items[0]);
-      var songCount = 0;
+      console.log("Artist(s): " + song.artists[0].name);
+      console.log("Song name: " + song.name);
+      console.log("Preview song: " + song.preview_url);
+      console.log("Link to Spotify track: " + song.external_urls.spotify);
+      // console.log("Album: " + song.)
 
-      data.tracks.items.forEach(function (song) {
-        songCount += 1;
-                
-        console.log("Song # " + songCount);
-        console.log('*-----------------------------------*');
-
-        console.log("Artist(s): " + song.artists[0].name);
-        console.log("Song name: " + song.name);
-        console.log("Preview song: " + song.preview_url);
-        console.log("Link to Spotify track: " + song.external_urls.spotify);
-        // console.log("Album: " + song.)
-
-        console.log('*-----------------------------------*\n');
-      })
-    }
-  })
+      console.log('*-----------------------------------*\n');
+    })
+  }
 }
+
+if (action === "spotify-this-song") {
+
+  if (value) {
+    spotify.search({ type: 'track', query: value, limit: 20 }, function (err, data) {
+      handleSpot(err, data);
+    })
+  }
+  else {
+    spotify.search({ type: 'track', query: "The Sign", limit: 20 }, function (err, data) {
+      handleSpot(err, data);
+    })
+  }
+};
